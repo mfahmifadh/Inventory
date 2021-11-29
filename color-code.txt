@@ -1,0 +1,8 @@
+Primary Color : #0000CD
+Primary Color Hover : #dee2e6
+
+
+Color Now :
+
+1. Primary Color : Apricot : #F7882F
+2. Primary Color Hover : Citrus : #F7C331
