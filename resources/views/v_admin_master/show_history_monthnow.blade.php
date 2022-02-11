@@ -1,4 +1,4 @@
-@extends('v_petugas.layout.app')
+@extends('v_admin_master.layout.app')
 
 @section('content')
 
@@ -12,7 +12,7 @@
           <div class="col-sm-6">
             <ol class="breadcrumb float-sm-right">
               <li class="breadcrumb-item"><a href="{{ url('admin-user/dashboard') }}">Dashboard</a></li>
-              <li class="breadcrumb-item active">Riwayat Barang</li>
+              <li class="breadcrumb-item active">Pengiriman Bulan {{$month_now}}</li>
             </ol>
           </div>
         </div><!-- /.row -->
@@ -36,11 +36,11 @@
       <div class="container-fluid">
         <div class="card card-warning">
             <div class="card-header">
-                <h3 class="card-title left" style="float:left;margin-top: 0.5vh;"><b>DATA RIWAYAT BARANG MASUK DAN KELUAR</b></h3>
+                <h3 class="card-title left" style="float:left;margin-top: 0.5vh;text-transform: uppercase;"><b>DATA BARANG MASUK DAN KELUAR BULAN {{$month_now}}</b></h3>
             </div>
             <!-- /.card-header -->
             <div class="card-body">
-                 <table id="example2" class="table table-bordered table-striped">
+                 <table id="example1" class="table table-bordered table-striped">
                     <thead>
                         <tr>
                             <th>NO</th>
@@ -57,7 +57,7 @@
                     @foreach($history as $data)
                         <tr>
                             <td>{{ $no++ }}</td>
-                            <td>{{ \Carbon\Carbon::parse($data->order_tm)->isoFormat('H:m') }} /
+                            <td>{{ date('H:i', strtotime($data->order_tm)) }} /
                                 {{ \Carbon\Carbon::parse($data->order_dt)->isoFormat('DD MMM Y') }}</td>
                             <td>{{ $data->workunit_name }}</td>
                             <td>{{ $data->item_name }}</td>

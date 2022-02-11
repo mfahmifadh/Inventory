@@ -58,7 +58,7 @@
                         <tr>
                             <td>{{ $no++ }}</td>
                             <td>{{ date('H:i', strtotime($data->order_tm)) }} /
-                            {{ date('d F Y', strtotime($data->order_dt)) }}</td>
+                                {{ \Carbon\Carbon::parse($data->order_dt)->isoFormat('DD MMM Y') }}</td>
                             <td>{{ $data->workunit_name }}</td>
                             <td>{{ $data->item_name }}</td>
                             <td>{{ $data->slot_id }}</td>

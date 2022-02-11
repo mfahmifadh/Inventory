@@ -2,20 +2,28 @@
 
 @section('content')
 
+
+    @foreach($order as $data)
     <!-- Content Header (Page header) -->
     <div class="content-header">
       <div class="container-fluid">
         <div class="row mb-2">
           <div class="col-sm-4">
-            <h1 class="m-0"><a href="javascript:window.print()" class="btn btn-primary">PRINT</a></h1>
+            <div class="row">
+              <h1 class="m-0"><a href="javascript:window.print()" class="btn btn-primary">
+                <i class="fas fa-print"></i>
+              </a></h1>
+              &nbsp;
+              <h1 class="m-0"><a href="{{ url('admin-user/download_pdf/'. $data->id_order) }}" class="btn btn-danger">
+                <i class="fas fa-file-pdf"></i>
+              </a></h1>
+            </div>
           </div><!-- /.col -->
         </div><!-- /.row -->
       </div><!-- /.container-fluid -->
     </div>
     <!-- /.content-header -->
 
-
-	@foreach($order as $data)
 	<section class="content">
     <div class="container-fluid">
       <br>
@@ -35,11 +43,13 @@
         </thead>
         <tbody>
           <tr>
-            <td class="confirm-txt-tanggal" colspan="3">{{ date('d F Y', strtotime($data->order_dt)) }}</td>
+            <td class="confirm-txt-tanggal" colspan="3">
+              {{ \Carbon\Carbon::parse($data->order_dt)->isoFormat('DD MMMM Y') }}
+            </td>
           </tr> 
           <tr>
             <td>Nomor</td>
-            <td colspan="2"> : {{ $data->letter_num }} </td>
+            <td colspan="2"> : {{ $data->id_order }} </td>
           </tr>
           <tr>
             <td>Perihal</td>
@@ -72,7 +82,7 @@
             </td>
           </tr>
           <tr>
-            <td colspan="3">Jakarta, {{ date('d F Y', strtotime($data->order_dt)) }}</td>
+            <td colspan="3">Jakarta, {{ \Carbon\Carbon::parse($data->order_dt)->isoFormat('DD MMMM Y') }}</td>
           </tr>
           <tr>
             <td><b>PETUGAS</b></td>

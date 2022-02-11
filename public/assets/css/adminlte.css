@@ -13542,13 +13542,13 @@ body:not(.layout-fixed) .main-sidebar .sidebar {
 
 .sidebar-dark-primary .nav-sidebar > .nav-item > .nav-link.active,
 .sidebar-light-primary .nav-sidebar > .nav-item > .nav-link.active {
-  background-color: #F7882F;
+  background-color: #FF8243;
   color: #fff;
 }
 
 .sidebar-dark-primary .nav-sidebar.nav-legacy > .nav-item > .nav-link.active,
 .sidebar-light-primary .nav-sidebar.nav-legacy > .nav-item > .nav-link.active {
-  border-color: #F7882F;
+  border-color: #FDA65D;
 }
 
 .sidebar-dark-secondary .nav-sidebar > .nav-item > .nav-link.active,
@@ -27191,7 +27191,7 @@ body.text-sm .input-group-text {
 }
 
 .card-primary:not(.card-outline) > .card-header {
-  background-color: #F7882F;
+  background-color: #007bff;
 }
 
 .card-primary:not(.card-outline) > .card-header,
@@ -27475,7 +27475,7 @@ body.text-sm .input-group-text {
 }
 
 .card-warning:not(.card-outline) > .card-header {
-  background-color: #F7882F;
+  background-color: #E26A2C;
 }
 
 .card-warning:not(.card-outline) > .card-header,
@@ -33914,7 +33914,7 @@ a.close.disabled, a.disabled.mailbox-attachment-close {
   -webkit-justify-content: center;
   -ms-flex-pack: center;
   justify-content: center;
-  line-height: 1.8;
+  line-height: 2.5;
   -webkit-flex: 1;
   -ms-flex: 1;
   flex: 1;

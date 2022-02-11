@@ -45,11 +45,22 @@
               @csrf             
               <div class="form-group first">
                 <label for="username">Username</label>
-                <input type="text" class="form-control" name="username" placeholder="Masukan Username">
+                <div class="input-group mb-3">
+                    <div class="input-group-prepend">
+                      <span class="input-group-text"><i class="fas fa-id-card"></i></span>
+                    </div>
+             		    <input type="text" name="username" class="form-control" placeholder="Masukan Username" required>
+                </div>
               </div>
               <div class="form-group last mb-3">
                 <label for="password">Password</label>
-                <input type="password" class="form-control" name="password" id="myInput" placeholder="Masukan Password" minlength="6">
+                <div class="input-group mb-3">
+                    <div class="input-group-prepend">
+                      <span class="input-group-text"><i class="fas fa-lock"></i></span>
+                    </div>
+                    <input type="password" class="form-control" name="password" id="myInput" placeholder="Masukan Password" minlength="6">  
+                </div>
+                
               </div>
               
               <div class="d-flex mb-5 align-items-center">

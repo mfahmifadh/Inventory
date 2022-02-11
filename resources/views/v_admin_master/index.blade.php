@@ -30,9 +30,9 @@
         <div class="row">
           <div class="col-lg-6 col-6">
             <!-- small box -->
-            <div class="small-box bg-info">
+            <div class="small-box" style="background-color:#008000;color: white;">
               <div class="inner">
-                <h4><b>GUDANG 09</b></h4>
+                <h5><b>GUDANG 09</b></h5>
                 <p><h6>{{ $palletavail09 }} Pallet Tersedia</h6></p>
               </div>
               <div class="icon">
@@ -44,9 +44,9 @@
           <!-- ./col -->
           <div class="col-lg-6 col-6">
             <!-- small box -->
-            <div class="small-box bg-warning">
+            <div class="small-box" style="background-color:#008000;color: white;">
               <div class="inner">
-                <h4><b>GUDANG 05 B</b></h4>
+                <h5><b>GUDANG 05 B</b></h5>
                 <p><h6>{{ $palletavail05b }} Pallet Tersedia</h6></p>
               </div>
               <div class="icon">
@@ -61,22 +61,90 @@
     </section>
 
     <!-- Chart Content -->
-<!--     <section class="content">
+    <section class="content">
         <div class="container-fluid">
             <div class="row">
-                <div class="col-md-6">
-                    <div class="card card-warning">
+                <div class="col-md-12">
+                    <div class="card card-success">
                         <div class="card-header">
-                            <div class="card-title"><b>GRAFIK BARANG MASUK & KELUAR</b></div>
+                            <div class="card-title"><b>GRAFIK BARANG MASUK</b></div>
                         </div>
-                        <div class="card-body">
-                            <canvas id="barChart" style="height:62vh;"></canvas>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="card-body">
+                                    <canvas id="barChart" height="200"></canvas>
+                                </div>
+                            </div> 
+                            <div class="col-md-6">
+                                <div class="card-body">
+                                    <table id="example4a" class="table table-bordered table-striped">
+                                        <thead>
+                                            <tr class="td-status">
+                                                <th>NO</th>
+                                                <th>TANGGAL</th>
+                                                <th>SATKER</th>
+                                                <th>TOTAL BARANG</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <?php $no=1;?>
+                                            @foreach($enorders as $data)
+                                            <tr class="td-status">
+                                                <td><a href="{{ url('admin-master/detail_order/'. $data->id_order) }}"><b>{{$no++}}</b></a></td>
+                                                <td>{{ \Carbon\Carbon::parse($data->order_dt)->isoFormat('DD MMM Y') }}</td>
+                                                <td>{{$data->workunit_name}}</td>
+                                                <td>{{$data->totalitem}} Barang</td>
+                                            </tr>
+                                            @endforeach
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div> 
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-12">
+                    <div class="card card-danger">
+                        <div class="card-header">
+                            <div class="card-title"><b>GRAFIK BARANG KELUAR</b></div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6"> 
+                                <div class="card-body">
+                                    <canvas id="barChartExit" height="200"></canvas>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="card-body">
+                                    <table id="example4b" class="table table-bordered table-striped">
+                                        <thead>
+                                            <tr class="td-status">
+                                                <th>NO</th>
+                                                <th>TANGGAL</th>
+                                                <th>SATKER</th>
+                                                <th>TOTAL BARANG</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <?php $no=1;?>
+                                            @foreach($exorders as $data)
+                                            <tr class="td-status">
+                                                <td><a href="{{ url('admin-master/detail_order/'. $data->id_order) }}"><b>{{$no++}}</b></a></td>
+                                                <td>{{ \Carbon\Carbon::parse($data->order_dt)->isoFormat('DD MMM Y') }}</td>
+                                                <td>{{$data->workunit_name}}</td>
+                                                <td>{{$data->totalitem}} Barang</td>
+                                            </tr>
+                                            @endforeach
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-    </section> -->
+    </section>
 
     <!-- Warehouse content -->
     <section class="content">

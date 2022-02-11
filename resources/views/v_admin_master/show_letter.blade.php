@@ -7,12 +7,12 @@
       <div class="container-fluid">
         <div class="row mb-2">
           <div class="col-sm-6">
-            <h1 class="m-0"></h1>
+            <h1 class="m-0">Arsip Surat</h1>
           </div><!-- /.col -->
           <div class="col-sm-6">
             <ol class="breadcrumb float-sm-right">
               <li class="breadcrumb-item"><a href="{{ url('admin-master/dashboard') }}">Dashboard</a></li>
-              <li class="breadcrumb-item active">Data Gudang</li>
+              <li class="breadcrumb-item active">Data Surat</li>
             </ol>
           </div>
         </div><!-- /.row -->
@@ -37,12 +37,7 @@
         <div class="card card-warning">
             <div class="card-header">
                 <h3 class="card-title left" style="float:left;margin-top: 0.5vh;">
-                    <b>DATA GUDANG KEMENKES</b>
-                </h3>
-                <h3 class="card-title right" style="float:right;">
-                    <a href="{{ url('admin-master/create_warehouse') }}" class="btn btn-primary btn-sm">
-                        <i class="fas fa-plus-circle"></i> Tambah Gudang
-                    </a>
+                    <b>ARSIP SURAT MASUK & KELUAR</b>
                 </h3>
             </div>
             <!-- /.card-header -->
@@ -51,52 +46,44 @@
                     <thead>
                     <tr>
                         <th>No</th>
-                        <th>Kode</th>
-                        <th>Model</th>
-                        <th>Nama Gudang</th>
-                        <th>Keterangan</th>
+                        <th>ID Order</th>
+                        <th>SATKER</th>
+                        <th>Tanggal</th>
                         <th>Status</th>
                         <th>Aksi</th>
                     </tr>
                     </thead>
                     <tbody>
                     <?php $no=1;?>
-                    @foreach($warehouse as $data)
+                    @foreach($letter as $data)
                     <tr>
                         <td>{{ $no++ }}</td>
-                        <td>{{ $data->id_warehouse }}</td>
-                        <td>{{ $data->warehouse_category }}</td>
-                        <td>{{ $data->warehouse_name }}</td>
-                        <td>{!! $data->warehouse_description !!}</td>
+                        <td>{{ $data->id_order }}</td>
+                        <td>{{ $data->workunit_name }}</td>
+                        <td>{{ date('H:i', strtotime($data->order_tm)) }} /
+                            {{ \Carbon\Carbon::parse($data->order_dt)->isoFormat('DD MMMM Y') }}</td>
                         <td class="td-status">
-                            @if($data->status_id == 1)
-                                <a class="btn btn-success btn-xs disabled">Aktif</span>
+                            @if ($data->order_category == 'Pengiriman')
+                                <a class="btn btn-success btn-sm disabled"><b>BARANG MASUK</b></a></td>
                             @endif
-                            @if($data->status_id == 2)
-                                <a class="btn btn-danger btn-xs disabled">Tidak Aktif</span>
+                            @if ($data->order_category == 'Pengambilan')
+                                <a class="btn btn-danger btn-sm disabled"><b>BARANG KELUAR</b></a></td>
                             @endif
+                        <td class="td-status">
+                            <a href="{{ url('admin-master/detail_letter/'. $data->id_order) }}" class="btn btn-primary btn-sm">DETAIL</a>
                         </td>
-                        <td class="td-aksi">
-                            @if($data->status_id == 1)
-                                <a href="{{ url('admin-master/edit_warehouse/'. $data->id_warehouse) }}" class="btn btn-warning btn-xs">Edit</a>        
-                                <a href="{{ url('admin-master/detail_warehouse/'. $data->id_warehouse) }}" class="btn btn-info btn-xs">Detail</a>
-                            @endif
-                            @if($data->status_id == 2)
-                                <a href="{{ url('admin-master/edit_warehouse/'. $data->id_warehouse) }}" class="btn btn-warning btn-xs">Edit</a>
-                            @endif
-                        </td>
+
                     </tr>
                     @endforeach
                     </tbody>
                       <tfoot>
                     <tr>
-                    <th>No</th>
-                    <th>Kode</th>
-                    <th>Model</th>
-                    <th>Nama Gudang</th>
-                    <th>Keterangan</th>
-                    <th>Status</th>
-                    <th>Aksi</th>
+                        <th>No</th>
+                        <th>ID Order</th>
+                        <th>SATKER</th>
+                        <th>Tanggal</th>
+                        <th>Status</th>
+                        <th>Aksi</th>
                     </tr>
                     </tfoot>
                 </table>

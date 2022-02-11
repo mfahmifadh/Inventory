@@ -98,8 +98,24 @@
               </a>
               <ul class="nav nav-treeview">
                 <li class="nav-item">
-                  <a href="{{ url('admin-user/category_item/') }}" class="nav-link">
-                    <i class="fas fa-list nav-icon"></i>
+                  <a href="{{ url('admin-user/show_entry_item/') }}" class="nav-link {{ Request::is('admin-user/show_entry_item') ? 'active' : '' }}">
+                    <i class="far fa-dot-circle nav-icon"></i>
+                    <p>Barang Masuk</p>
+                  </a>
+                </li>
+              </ul>
+              <ul class="nav nav-treeview">
+                <li class="nav-item">
+                  <a href="{{ url('admin-user/show_exit_item/') }}" class="nav-link {{ Request::is('admin-user/show_exit_item') ? 'active' : '' }}">
+                    <i class="far fa-dot-circle nav-icon"></i>
+                    <p>Barang Keluar</p>
+                  </a>
+                </li>
+              </ul>
+              <ul class="nav nav-treeview">
+                <li class="nav-item">
+                  <a href="{{ url('admin-user/category_item/') }}" class="nav-link {{ Request::is('admin-user/category_item') ? 'active' : '' }}" >
+                    <i class="far fa-dot-circle nav-icon"></i>
                     <p>Kategori Barang</p>
                   </a>
                 </li>
@@ -116,13 +132,13 @@
               <ul class="nav nav-treeview">
                 <li class="nav-item">
                   <a href="{{ url('admin-user/create_all_order/') }}" class="nav-link">
-                    <i class="fas fa-chevron-circle-right"></i>
+                    <i class="far fa-dot-circle nav-icon"></i>  
                     <p>Proses Barang Masuk</p>
                   </a>
                 </li>
                 <li class="nav-item">
                   <a href="{{ url('admin-user/create_exit_order/') }}" class="nav-link">
-                    <i class="fas fa-chevron-circle-left"></i>
+                    <i class="far fa-dot-circle nav-icon"></i>
                     <p>Proses Barang Keluar</p>
                   </a>
                 </li>
@@ -526,7 +542,15 @@
       }).buttons().container().appendTo('#example1_wrapper .col-md-6:eq(0)');
 
       $("#example2b").DataTable({
-        "responsive": true, "lengthChange": false, "autoWidth": false
+        "responsive": true, "lengthChange": false, "autoWidth": false, "pageLength":5
+      }).buttons().container().appendTo('#example1_wrapper .col-md-6:eq(0)');
+
+      $("#example2c").DataTable({
+        "responsive": true, "lengthChange": false, "autoWidth": false, "pageLength":3
+      }).buttons().container().appendTo('#example1_wrapper .col-md-6:eq(0)');
+
+      $("#example2d").DataTable({
+        "responsive": true, "lengthChange": false, "autoWidth": false, "pageLength":5
       }).buttons().container().appendTo('#example1_wrapper .col-md-6:eq(0)');
 
       $('#example3').DataTable({

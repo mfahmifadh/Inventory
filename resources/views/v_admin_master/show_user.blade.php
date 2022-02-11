@@ -34,7 +34,7 @@
     <!-- Main content -->
     <section class="content">
       <div class="container-fluid">
-        <div class="card card-primary card-outline">   
+        <div class="card card-warning">   
           <div class="card-header">
               <h3 class="card-title left" style="float:left;margin-top: 0.5vh;"><b>DATA PENGGUNA</b></h3>
               <h3 class="card-title left" style="float:right;margin-top: 0.5vh;">
@@ -45,10 +45,10 @@
           </div>
           <ul class="nav nav-tabs" id="custom-content-below-tab" role="tablist">
             <li class="nav-item">
-              <a class="nav-link active" id="custom-content-below-entryitem-tab" data-toggle="pill" href="#custom-content-below-entryitem" role="tab" aria-controls="custom-content-below-entryitem" aria-selected="true">Data Pengguna SATKER</a>
+              <a class="nav-link active" id="custom-content-below-entryitem-tab" data-toggle="pill" href="#custom-content-below-entryitem" role="tab" aria-controls="custom-content-below-entryitem" aria-selected="true"><b>SATUAN KERJA</b></a>
             </li>
             <li class="nav-item">
-              <a class="nav-link" id="custom-content-below-exititem-tab" data-toggle="pill" href="#custom-content-below-exititem" role="tab" aria-controls="custom-content-below-exititem" aria-selected="false">Data Pengguna Petugas</a>
+              <a class="nav-link" id="custom-content-below-exititem-tab" data-toggle="pill" href="#custom-content-below-exititem" role="tab" aria-controls="custom-content-below-exititem" aria-selected="false"><b>PETUGAS</b></a>
             </li>
           </ul>
           <div class="card-body">
@@ -59,10 +59,7 @@
                     <thead>
                     <tr>
                         <th>No</th>
-                        <th>ID SATKER</th>
-                        <th>Role</th>
                         <th>Satuan Kerja</th>
-                        <th>Nama</th>
                         <th>Username</th>
                         <th>Status</th>
                     </tr>
@@ -72,17 +69,14 @@
                     @foreach($satker as $data)
                     <tr>
                         <td>{{ $no++ }}</td>
-                        <td>{{ $data->workunit_id }}</td>
-                        <td>{{ $data->role_name }}</td>
                         <td>{{ $data->workunit_name }}</td>
-                        <td>{!! $data->full_name !!}</td>
                         <td>{!! $data->username !!}</td>
                         <td class="td-status">
                             @if($data->status_id == 1)
-                                <a class="btn btn-success btn-xs disabled">Aktif</span>
+                                <a class="btn btn-success btn-md disabled">Aktif</span>
                             @endif
                             @if($data->status_id == 2)
-                                <a class="btn btn-danger btn-xs disabled">Tidak Aktif</span>
+                                <a class="btn btn-danger btn-md disabled">Tidak Aktif</span>
                             @endif
                         </td>
                     </tr>
@@ -91,10 +85,7 @@
                     <tfoot>
                     <tr>
                         <th>No</th>
-                        <th>NIK</th>
-                        <th>Role</th>
                         <th>Satuan Kerja</th>
-                        <th>Nama</th>
                         <th>Username</th>
                         <th>Status</th>
                     </tr>
@@ -107,7 +98,6 @@
                     <thead>
                     <tr>
                         <th>No</th>
-                        <th>NIP</th>
                         <th>Role</th>
                         <th>Nama</th>
                         <th>Username</th>
@@ -119,7 +109,6 @@
                     @foreach($petugas as $data)
                     <tr>
                         <td>{{ $no++ }}</td>
-                        <td>{{ $data->id }}</td>
                         <td>{{ $data->role_name }}</td>
                         <td>{!! $data->full_name !!}</td>
                         <td>{!! $data->username !!}</td>
@@ -137,7 +126,6 @@
                     <tfoot>
                     <tr>
                         <th>No</th>
-                        <th>NIP</th>
                         <th>Role</th>
                         <th>Nama</th>
                         <th>Username</th>

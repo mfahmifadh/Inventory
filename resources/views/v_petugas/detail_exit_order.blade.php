@@ -60,7 +60,6 @@
               <thead>
               <tr>
                 <th>No</th>
-                <th>Kode</th>
                 <th>Kategori Barang</th>
                 <th>Nama Barang</th>
                 <th>Berat</th>
@@ -74,7 +73,6 @@
                 @foreach($detailorder as $row)
                 <tr>
                   <td>{{ $no++ }}</td>
-                  <td>{{ $row->item_code }}</td>
                   <td>{{ $row->itemcategory_name }}</td>
                   <td>{{ $row->item_name }}</td>
                   <td>{{ $row->item_weight }}</td>
@@ -89,7 +87,6 @@
               <tfoot>
               <tr>
                 <th>No</th>
-                <th>Kode</th>
                 <th>Kategori Barang</th>
                 <th>Nama Barang</th>
                 <th>Berat</th>

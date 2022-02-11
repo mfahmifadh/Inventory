@@ -57,7 +57,7 @@
                     <div class="input-group-prepend">
                       <span class="input-group-text"><i class="fas fa-key"></i></span>
                     </div>
-             		<input type="date" name="order_deadline" class="form-control" required>
+             		    <input type="date" name="order_deadline" class="form-control" required>
                   </div>
                   <hr>
                 </div>

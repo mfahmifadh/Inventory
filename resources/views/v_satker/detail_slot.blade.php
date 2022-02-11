@@ -55,14 +55,18 @@
                     </h6>
                   </div>
                   <div class="col-md-3">
-                    <h6>Tanggal Masuk <span style="margin-right:4vh;"></span>: <b>{{ date('d F Y', strtotime($palletorderid->order_dt)) }}</b></h6>
+                    <h6>Tanggal Masuk <span style="margin-right:4vh;"></span>: 
+                      <b>{{ \Carbon\Carbon::parse($palletorderid->order_dt)->isoFormat('DD MMMM Y') }}</b>
+                    </h6>
                   </div>
                   <div class="col-md-9">
                     <h6>Satuan Kerja <span style="margin-right:4vh;"></span>:
                       <b>{{ $palletorderid->workunit_name }}</b></h6>
                   </div>
                   <div class="col-md-3">
-                    <h6>Tanggal Deadline <span style="margin-right:2vh;"></span>: <b>{{ date('d F Y', strtotime($palletorderid->order_deadline)) }}</b></h6>
+                    <h6>Tanggal Deadline <span style="margin-right:2vh;"></span>: 
+                      <b>{{ \Carbon\Carbon::parse($palletorderid->order_deadline)->isoFormat('DD MMMM Y') }}</b>
+                    </h6>
                   </div>
                 </div>
                 @endforeach
@@ -71,7 +75,6 @@
                     <thead>
                     <tr>
                       <th>No</th>
-                      <th>Kode</th>
                       <th>Kategori Barang</th>
                       <th>Nama Barang</th>
                       <th>Berat</th>
@@ -85,7 +88,6 @@
                     @foreach($pbm_entry as $entryitem)
                     <tr>
                       <td>{{ $no++ }}</td>
-                      <td>{{ $entryitem->item_code }}</td>
                       <td>{{ $entryitem->itemcategory_name }}</td>
                       <td>{{ $entryitem->item_name }}</td>
                       <td>{{ $entryitem->item_weight }}</td>
@@ -99,7 +101,6 @@
                     <tfoot>
                     <tr>
                       <th>No</th>
-                      <th>Kode</th>
                       <th>Kategori Barang</th>
                       <th>Nama Barang</th>
                       <th>Berat</th>
@@ -173,14 +174,18 @@
                     </h6>
                   </div>
                   <div class="col-md-3">
-                    <h6>Tanggal Masuk <span style="margin-right:4vh;"></span>: <b>{{ date('d F Y', strtotime($palletorderid->order_dt)) }}</b></h6>
+                    <h6>Tanggal Masuk <span style="margin-right:4vh;"></span>: 
+                      <b>{{ \Carbon\Carbon::parse($palletorderid->order_dt)->isoFormat('DD MMMM Y') }}</b>
+                    </h6>
                   </div>
                   <div class="col-md-9">
                     <h6>Satuan Kerja <span style="margin-right:4vh;"></span>:
                       <b>{{ $palletorderid->workunit_name }}</b></h6>
                   </div>
                   <div class="col-md-3">
-                    <h6>Tanggal Deadline <span style="margin-right:2vh;"></span>: <b>{{ date('d F Y', strtotime($palletorderid->order_deadline)) }}</b></h6>
+                    <h6>Tanggal Deadline <span style="margin-right:2vh;"></span>: 
+                      <b>{{ \Carbon\Carbon::parse($palletorderid->order_deadline)->isoFormat('DD MMMM Y') }}</b>
+                    </h6>
                   </div>
                 </div>
                 @endforeach
@@ -189,7 +194,6 @@
                   <thead>
                   <tr>
                      <th>No</th>
-                     <th>Kode</th>
                      <th>Kategori Barang</th>
                      <th>Nama Barang</th>
                      <th>Berat</th>
@@ -203,7 +207,6 @@
                   @foreach($pbm_entryrack as $detailorder)
                     <tr>
                      <td>{{ $no++ }}</td>
-                     <td>{{ $detailorder->item_code }}</td>
                      <td>{{ $detailorder->itemcategory_name }}</td>
                      <td>{{ $detailorder->item_name }}</td>
                      <td>{{ $detailorder->item_weight }}</td>
@@ -217,7 +220,6 @@
                   <tfoot>
                    <tr>
                      <th>No</th>
-                     <th>Kode</th>
                      <th>Kategori Barang</th>
                      <th>Nama Barang</th>
                      <th>Berat</th>

@@ -49,15 +49,14 @@
           <div class="card-body">
             <form action="{{ url('admin-user/add_exit_order') }}" method="POST">
               @csrf
-              <input type="hidden" name="id_order" class="form-control" value="PBK-{{ $order_id }}" readonly>
               <div class="row">
                 <div class="col-md-12">
-                  <label>NOMOR SURAT : </label>
+                  <label>ID Order : </label>
                   <div class="input-group mb-3">
                     <div class="input-group-prepend">
                       <span class="input-group-text"><i class="fas fa-key"></i></span>
                     </div>
-                    <input type="text" name="letter_num" class="form-control" placeholder="Masukan Nomor Surat" required style="text-transform: uppercase;">
+                    <input type="text" name="id_order" class="form-control" value="PBK-{{ $order_id }}" readonly>
                   </div>
                   <hr>
                 </div>

@@ -65,14 +65,14 @@
                     </h6>
                   </div>
                   <div class="col-md-3">
-                    <h6>Tanggal Masuk <span style="margin-right:4vh;"></span>: <b>{{ date('d F Y', strtotime($palletorderid->order_dt)) }}</b></h6>
+                    <h6>Tanggal Masuk <span style="margin-right:4vh;"></span>: <b>{{ \Carbon\Carbon::parse($palletorderid->order_dt)->isoFormat('DD MMMM Y') }}</b></h6>
                   </div>
                   <div class="col-md-9">
                     <h6>Satuan Kerja <span style="margin-right:4vh;"></span>:
                       <b>{{ $palletorderid->workunit_name }}</b></h6>
                   </div>
                   <div class="col-md-3">
-                    <h6>Tanggal Deadline <span style="margin-right:2vh;"></span>: <b>{{ date('d F Y', strtotime($palletorderid->order_deadline)) }}</b></h6>
+                    <h6>Tanggal Deadline <span style="margin-right:2vh;"></span>: <b>{{ \Carbon\Carbon::parse($palletorderid->order_deadline)->isoFormat('DD MMMM Y') }}</b></h6>
                   </div>
                 </div>
                 @endforeach
@@ -140,8 +140,8 @@
                     @foreach($pbk_exit as $entryitem)
                     <tr>
                       <td>{{ $no++ }}</td>
-                      <td>{{ date('H:i', strtotime($entryitem->order_tm)) }} /
-                          {{ date('d F Y', strtotime($entryitem->order_dt)) }}</td>
+                      <td>{{ \Carbon\Carbon::parse($entryitem->order_tm)->isoFormat('H:M') }} /
+                          {{ \Carbon\Carbon::parse($entryitem->order_dt)->isoFormat('DD MMM Y') }}</td>
                       <td>{{ $entryitem->order_id }}</td>
                       <td>{{ $entryitem->slot_id }}</td>
                       <td>{{ $entryitem->total_item }} Barang</td>
@@ -190,15 +190,15 @@
                       <td>{{ $history->item_name }}</td>
                       <td>{{ $history->item_qty }}</td>
                       <td>{{ $history->workunit_name }}</td>
-                      <td>{{ date('H:i', strtotime($history->item_entry_date)) }} / 
-                          {{ date('d F Y', strtotime($history->item_entry_date)) }}</td>
+                      <td>{{ \Carbon\Carbon::parse($history->item_entry_date)->isoFormat('H:M') }} /
+                          {{ \Carbon\Carbon::parse($history->item_entry_date)->isoFormat('DD MMM Y') }}</td>
                       <td>
                           @if($history->item_exit_date == '')
                             <b> - </b>
                           @endif
                           @if($history->item_exit_date != '')
-                            {{ date('H:i', strtotime($history->item_exit_date)) }} / 
-                            {{ date('d F Y', strtotime($history->item_exit_date)) }}
+                            {{ \Carbon\Carbon::parse($history->item_exit_date)->isoFormat('H:M') }} /
+                            {{ \Carbon\Carbon::parse($history->item_exit_date)->isoFormat('DD MMM Y') }}
                           @endif
                       </td>
                       <td class="td-status">
@@ -300,14 +300,14 @@
                     </h6>
                   </div>
                   <div class="col-md-3">
-                    <h6>Tanggal Masuk <span style="margin-right:4vh;"></span>: <b>{{ date('d F Y', strtotime($palletorderid->order_dt)) }}</b></h6>
+                    <h6>Tanggal Masuk <span style="margin-right:4vh;"></span>: <b>{{ \Carbon\Carbon::parse($palletorderid->order_dt)->isoFormat('DD MMMM Y') }}</b></h6>
                   </div>
                   <div class="col-md-9">
                     <h6>Satuan Kerja <span style="margin-right:4vh;"></span>:
                       <b>{{ $palletorderid->workunit_name }}</b></h6>
                   </div>
                   <div class="col-md-3">
-                    <h6>Tanggal Deadline <span style="margin-right:2vh;"></span>: <b>{{ date('d F Y', strtotime($palletorderid->order_deadline)) }}</b></h6>
+                    <h6>Tanggal Deadline <span style="margin-right:2vh;"></span>: <b>{{ \Carbon\Carbon::parse($palletorderid->order_deadline)->isoFormat('DD MMMM Y') }}</b></h6>
                   </div>
                 </div>
                 @endforeach
@@ -316,7 +316,6 @@
                   <thead>
                   <tr>
                      <th>No</th>
-                     <th>Kode</th>
                      <th>Kategori Barang</th>
                      <th>Nama Barang</th>
                      <th>Berat</th>
@@ -330,7 +329,6 @@
                   @foreach($pbm_entryrack as $detailorder)
                     <tr>
                      <td>{{ $no++ }}</td>
-                     <td>{{ $detailorder->item_code }}</td>
                      <td>{{ $detailorder->itemcategory_name }}</td>
                      <td>{{ $detailorder->item_name }}</td>
                      <td>{{ $detailorder->item_weight }}</td>
@@ -344,7 +342,6 @@
                   <tfoot>
                    <tr>
                      <th>No</th>
-                     <th>Kode</th>
                      <th>Kategori Barang</th>
                      <th>Nama Barang</th>
                      <th>Berat</th>
@@ -376,8 +373,8 @@
                     @foreach($pbk_exitrack as $entryitem)
                     <tr>
                       <td>{{ $no++ }}</td>
-                      <td>{{ date('H:i', strtotime($entryitem->order_tm)) }} /
-                          {{ date('d F Y', strtotime($entryitem->order_dt)) }}</td>
+                      <td>{{ \Carbon\Carbon::parse($entryitem->order_tm)->isoFormat('H:M') }} /
+                          {{ \Carbon\Carbon::parse($entryitem->order_dt)->isoFormat('DD MMM Y') }}</td>
                       <td>{{ $entryitem->order_id }}</td>
                       <td>{{ $entryitem->slot_id }}</td>
                       <td>{{ $entryitem->total_item }} Barang</td>
@@ -427,15 +424,15 @@
                       <td>{{ $history->item_name }}</td>
                       <td>{{ $history->item_qty }}</td>
                       <td>{{ $history->workunit_name }}</td>
-                      <td>{{ date('H:i', strtotime($history->item_entry_date)) }} / 
-                          {{ date('d F Y', strtotime($history->item_entry_date)) }}</td>
+                      <td>{{ \Carbon\Carbon::parse($history->item_entry_date)->isoFormat('H:M') }} /
+                          {{ \Carbon\Carbon::parse($history->item_entry_date)->isoFormat('DD MMM Y') }}</td>
                       <td>
                           @if($history->item_exit_date == '')
                             <b> - </b>
                           @endif
                           @if($history->item_exit_date != '')
-                            {{ date('H:i', strtotime($history->item_exit_date)) }} / 
-                            {{ date('d F Y', strtotime($history->item_exit_date)) }}
+                            {{ \Carbon\Carbon::parse($history->item_exit_date)->isoFormat('H:M') }} /
+                            {{ \Carbon\Carbon::parse($history->item_exit_date)->isoFormat('DD MMM Y') }}
                           @endif
                       </td>
                       <td class="td-status">

@@ -130,14 +130,6 @@
                         <label>Kategori Barang :</label>
                         <input type="text" class="form-control" name="itemcategory_name" style="text-transform: uppercase;" value="{{ $row->itemcategory_name }}">
                     </div>
-                    <div class="col-md-12">
-                        <label>tES Barang :</label>
-                        <textarea class="form-control summernote" name="warehouse_description">
-                            @foreach($warehouse as $row)
-                                {!! $row->warehouse_description !!}
-                            @endforeach
-                        </textarea>
-                    </div>
                   </div>
                 </div>
                 <div class="modal-footer justify-content-between">

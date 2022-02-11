@@ -1,4 +1,4 @@
-@extends('v_admin_master.layout.app')
+@extends('v_petugas.layout.app')
 
 @section('content')
 
@@ -13,7 +13,7 @@
           </div><!-- /.col -->
           <div class="col-sm-6">
             <ol class="breadcrumb float-sm-right">
-              <li class="breadcrumb-item"><a href="{{ url('admin-master/dashboard') }}">Dashboard</a></li>
+              <li class="breadcrumb-item"><a href="{{ url('admin-user/dashboard') }}">Dashboard</a></li>
             </ol>
           </div>
         </div><!-- /.row -->
@@ -35,7 +35,7 @@
     <!-- Main content -->
     <section class="content">
       <div class="container-fluid">
-        <div class="card card-warning">
+        <div class="card card-primary">
           <div class="card-header">
             <h3 class="card-title"><b>ID ORDER ({{$data->id_order}}) - DATA BARANG</b></h3>  
           </div>

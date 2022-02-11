@@ -11,18 +11,51 @@ use App\Models\OrderModel;
 use App\Models\OrderDataModel;
 use App\Models\OrderDetailModel;
 use App\Models\ItemCategoryModel;
+use App\Models\WorkunitModel;
 use App\Models\User;
 
 use DB;
 use Auth;
 use Hash;
 use Str;
+use PDF;
+use Carbon\Carbon;
 
 
 class AdminController extends Controller
 {
     public function index()
     {
+        $month      = Carbon::now()->isoFormat('M');
+        $datenow    = Carbon::now()->isoFormat('Y-MM-D');
+        $month_now  = Carbon::now()->isoFormat('MMMM');
+
+        $enorders   = DB::table('tbl_orders_data')
+                        ->select('id_order','workunit_name','order_dt','order_category','order_deadline',
+                                DB::raw("sum(total_item) as totalitem"))
+                        ->join('tbl_orders','tbl_orders.id_order','tbl_orders_data.order_id')
+                        ->join('tbl_workunits','tbl_workunits.id_workunit','tbl_orders.workunit_id')
+                        ->groupBy('id_order','workunit_name','order_dt','order_category','order_deadline')
+                        ->where('order_category','Pengiriman')
+                        ->orderby('order_dt','DESC')
+                        ->get();
+
+        $exorders   = DB::table('tbl_orders_data')
+                        ->select('id_order','workunit_name','order_dt','order_category','order_deadline',
+                                DB::raw("sum(total_item) as totalitem"))
+                        ->join('tbl_orders','tbl_orders.id_order','tbl_orders_data.order_id')
+                        ->join('tbl_workunits','tbl_workunits.id_workunit','tbl_orders.workunit_id')
+                        ->groupBy('id_order','workunit_name','order_dt','order_category','order_deadline')
+                        ->where('order_category','Pengambilan')
+                        ->orderby('order_dt','DESC')
+                        ->get();
+
+        $totalorder = DB::table('tbl_orders_detail')
+                        ->join('tbl_orders_data','tbl_orders_data.id_order_data','tbl_orders_detail.order_data_id')
+                        ->join('tbl_orders','tbl_orders.id_order','tbl_orders_data.order_id')
+                        ->where(DB::raw("(DATE_FORMAT(order_dt, '%m'))"), $month)
+                        ->count();
+                        
         $warehouse09    = DB::table('tbl_warehouses')
                             ->join('tbl_status','tbl_status.id_status','tbl_warehouses.status_id')
                             ->where('id_warehouse', 'G09')
@@ -92,7 +125,8 @@ class AdminController extends Controller
 
         return view('v_admin_master.index', compact('warehouse09','warehouse05B','pallet','rack_pallet_one_lvl1',
                 'rack_pallet_one_lvl2','rack_pallet_two_lvl1','rack_pallet_two_lvl2','rack_pallet_three_lvl1',
-                'rack_pallet_three_lvl2','rack_pallet_four_lvl1','rack_pallet_four_lvl2','palletavail09','palletavail05b'));
+                'rack_pallet_three_lvl2','rack_pallet_four_lvl1','rack_pallet_four_lvl2','palletavail09','palletavail05b',
+                'month_now','totalorder','enorders','datenow','exorders'));
     }
 
     // ====================
@@ -430,6 +464,30 @@ class AdminController extends Controller
                                                     'pallet_history','rack_history'));
     }
 
+    public function detailOrder($id)
+    {
+        $date           = date('Ymd', strtotime(now()));
+        $totalorder     = DB::table('tbl_orders')->where('id_order','like','%'.$date.'%')->count();
+        $totaldataorder = DB::table('tbl_orders_data')->count();
+        $order_id       = ($date."".$totalorder)+1;
+        $idorderdata    = ($date."".$totalorder."".$totaldataorder)+1;
+
+        $orders   = DB::table('tbl_orders')
+                        ->join('tbl_workunits','tbl_workunits.id_workunit','tbl_orders.workunit_id')
+                        ->where('id_order', $id)
+                        ->get();
+
+        $items    = DB::table('tbl_orders_detail')
+                        ->join('tbl_orders_data','tbl_orders_data.id_order_data','tbl_orders_detail.order_data_id')
+                        ->join('tbl_orders','tbl_orders.id_order','tbl_orders_data.order_id')
+                        ->join('tbl_slots','tbl_slots.id_slot','tbl_orders_data.slot_id')
+                        ->join('tbl_warehouses', 'tbl_warehouses.id_warehouse','tbl_slots.warehouse_id')
+                        ->join('tbl_workunits','tbl_workunits.id_workunit','tbl_orders.workunit_id')
+                        ->where('id_order', $id)
+                        ->get();
+        return view('v_admin_master.detail_order', compact('orders','items','idorderdata'));
+    }
+
     public function detailExitOrder($id)
     {
         $date           = date('Ymd', strtotime(now()));
@@ -523,6 +581,8 @@ class AdminController extends Controller
                         ->join('tbl_orders_data','tbl_orders_data.id_order_data','tbl_orders_detail.order_data_id')
                         ->join('tbl_orders','tbl_orders.id_order','tbl_orders_data.order_id')
                         ->join('tbl_slots','tbl_slots.id_slot','tbl_orders_data.slot_id')
+                        ->join('tbl_workunits','tbl_workunits.id_workunit','tbl_orders.workunit_id')
+                        ->join('tbl_warehouses','tbl_warehouses.id_warehouse','tbl_slots.warehouse_id')
                         ->where('item_status', 'Barang Masuk')
                         ->orderby('order_dt','DESC')
                         ->get();
@@ -539,6 +599,7 @@ class AdminController extends Controller
                         ->join('tbl_orders_data','tbl_orders_data.id_order_data','tbl_orders_detail.order_data_id')
                         ->join('tbl_orders','tbl_orders.id_order','tbl_orders_data.order_id')
                         ->join('tbl_slots','tbl_slots.id_slot','tbl_orders_data.slot_id')
+                        ->join('tbl_warehouses','tbl_warehouses.id_warehouse','tbl_slots.warehouse_id')
                         ->where('item_status', 'Barang Keluar')
                         ->orderby('order_dt','DESC')
                         ->get();
@@ -587,9 +648,12 @@ class AdminController extends Controller
         return redirect('admin-master/category_item')->with('success','Berhasil Mengubah Kategori');
     }
 
-    public function deleteCategory()
+    public function deleteCategory($id)
     {
-        $deletectgry = ItemCategoryModel::find($ID)
+        $deletectgry = ItemCategoryModel::where('id_item_category',$id);
+        $deletectgry->delete();
+
+        return redirect('admin-master/category_item')->with('success', 'Berhasil Menghapus Kategori');
     }
 
     // ====================
@@ -645,13 +709,26 @@ class AdminController extends Controller
     public function getChartTotalOrder()
     {
         $month_now  = date('m', strtotime(now()));
-        $result     = DB::table('tbl_orders_detail')
-                        ->join('tbl_orders_data','tbl_orders_data.id_order_data','tbl_orders_detail.order_data_id')
-                        ->join('tbl_orders','tbl_orders.id_order','tbl_orders_data.order_id')
-                        ->select(DB::raw("(DATE_FORMAT(order_dt, '%M')) as month"), DB::raw("count(item_code) as totalscore "))
+        $result = DB::table('tbl_orders')
+                        ->select(DB::raw("(DATE_FORMAT(order_dt, '%M')) as month"), DB::raw("count(id_order) as totalentryitem "))
                         ->orderBy('order_dt','ASC')
                         ->groupBy(DB::raw("(DATE_FORMAT(order_dt, '%M'))"))->limit(5)
-                        ->get();      
+                        ->where('order_category','Pengiriman')
+                        ->get(); 
+      
+
+        return response()->json($result);
+    }
+
+    public function getChartTotalExitOrder()
+    {
+        $month_now  = date('m', strtotime(now()));
+        $result = DB::table('tbl_orders')
+                        ->select(DB::raw("(DATE_FORMAT(order_dt, '%M')) as month"), DB::raw("count(id_order) as totalexititem "))
+                        ->orderBy('order_dt','ASC')
+                        ->groupBy(DB::raw("(DATE_FORMAT(order_dt, '%M'))"))->limit(5)
+                        ->where('order_category','Pengambilan')
+                        ->get(); 
 
         return response()->json($result);
     }
@@ -674,9 +751,127 @@ class AdminController extends Controller
                         ->join('tbl_slots','tbl_slots.id_slot','tbl_orders_data.slot_id')
                         ->join('tbl_warehouses','tbl_warehouses.id_warehouse','tbl_slots.warehouse_id')
                         ->join('tbl_workunits','tbl_workunits.id_workunit','tbl_orders.workunit_id')
-                        ->orderby('order_dt','DESC')
+                        ->orderBy('order_dt','DESC')
+                        ->orderBy('order_tm','DESC')
                         ->get();
         return view('v_admin_master.show_history', compact('history', 'idorderdata'));
+    }
+
+    public function showHistoryMonthNow()
+    {
+        $month          = Carbon::now()->isoFormat('M');
+        $month_now      = Carbon::now()->isoFormat('MMMM');
+        $date           = date('Ymd', strtotime(now()));
+        $totalorder     = DB::table('tbl_orders')->where('id_order','like','%'.$date.'%')->count();
+        $totaldataorder = DB::table('tbl_orders_data')->count();
+        $idorderdata    = ($date."".$totalorder."".$totaldataorder)+1;
+
+        $history    = DB::table('tbl_orders_detail')
+                        ->join('tbl_item_category','tbl_item_category.id_item_category','tbl_orders_detail.itemcategory_id')
+                        ->join('tbl_orders_data','tbl_orders_data.id_order_data','tbl_orders_detail.order_data_id')
+                        ->join('tbl_orders','tbl_orders.id_order','tbl_orders_data.order_id')
+                        ->join('tbl_slots','tbl_slots.id_slot','tbl_orders_data.slot_id')
+                        ->join('tbl_warehouses','tbl_warehouses.id_warehouse','tbl_slots.warehouse_id')
+                        ->join('tbl_workunits','tbl_workunits.id_workunit','tbl_orders.workunit_id')
+                        ->where(DB::raw("(DATE_FORMAT(order_dt, '%m'))"), $month)
+                        ->orderby('order_dt','DESC')
+                        ->get();
+        return view('v_admin_master.show_history_monthnow', compact('history', 'idorderdata','month_now'));
+    }
+
+    // ====================
+    // WORKUNIT
+    // ====================
+
+    public function showWorkunit()
+    {
+        $workunit = DB::table('tbl_workunits')->join('tbl_status','tbl_status.id_status','tbl_workunits.status_id')->get();
+
+        return view('v_admin_master/show_workunit', compact('workunit'));
+    }
+
+    public function addWorkunit(Request $request)
+    {
+        $addworkunit                   = new WorkunitModel();
+        $addworkunit->workunit_name    = strtoupper($request->input('workunit_name'));
+        $addworkunit->status_id        = 1;
+        $addworkunit->save();
+
+        return redirect('admin-master/show_workunit')->with('success','Berhasil Menambah Data SATKER');
+    }
+
+    public function editWorkunit(Request $request, $id)
+    {
+        $editctgry  = WorkunitModel::where('id_workunit',$id)
+                        ->update([
+                            'workunit_name'    => strtoupper($request->workunit_name),
+                            'status_id'        => $request->status_id
+                        ]);
+
+        return redirect('admin-master/show_workunit')->with('success','Berhasil Mengubah Data SATKER');
+    }
+
+    // ====================
+    // LETTER
+    // ====================
+
+    public function showLetter()
+    {
+        $letter = DB::table('tbl_orders')
+                    ->select('id_order','workunit_name','order_tm','order_dt','order_category')
+                    ->join('tbl_orders_data','tbl_orders_data.order_id','tbl_orders.id_order')
+                    ->join('tbl_workunits','tbl_workunits.id_workunit','tbl_orders.workunit_id')
+                    ->orderby('order_dt','DESC')
+                    ->groupBy('id_order','workunit_name','order_tm','order_dt','order_category')
+                    ->get();
+
+        return view('v_admin_master.show_letter', compact('letter'));
+    }
+
+    public function detailLetter($id)
+    {
+        $dataitem = DB::table('tbl_orders_detail')
+                        ->join('tbl_item_category','tbl_item_category.id_item_category','tbl_orders_detail.itemcategory_id')
+                        ->join('tbl_orders_data','tbl_orders_data.id_order_data','tbl_orders_detail.order_data_id')
+                        ->join('tbl_orders','tbl_orders.id_order','tbl_orders_data.order_id')
+                        ->join('tbl_slots','tbl_slots.id_slot','tbl_orders_data.slot_id')
+                        ->join('tbl_warehouses','tbl_warehouses.id_warehouse','tbl_slots.warehouse_id')
+                        ->where('order_id', $id)
+                        ->get();
+
+        $order     = DB::table('tbl_orders')
+                        ->join('tbl_workunits','tbl_workunits.id_workunit','tbl_orders.workunit_id')
+                        ->join('users','users.id','tbl_orders.adminuser_id')
+                        ->where('id_order', $id)
+                        ->get();
+
+        return view('v_admin_master/detail_letter', compact('order','dataitem'));
+    }
+
+    // ====================
+    // CETAK PDF 
+    // ====================
+
+    public function downloadPDF($id)
+    {
+        $letter_num = DB::table('tbl_orders')->select('letter_num')->where('id_order', $id)->get();
+        $dataitem = DB::table('tbl_orders_detail')
+                        ->join('tbl_item_category','tbl_item_category.id_item_category','tbl_orders_detail.itemcategory_id')
+                        ->join('tbl_orders_data','tbl_orders_data.id_order_data','tbl_orders_detail.order_data_id')
+                        ->join('tbl_orders','tbl_orders.id_order','tbl_orders_data.order_id')
+                        ->join('tbl_slots','tbl_slots.id_slot','tbl_orders_data.slot_id')
+                        ->join('tbl_warehouses','tbl_warehouses.id_warehouse','tbl_slots.warehouse_id')
+                        ->where('order_id', $id)
+                        ->get();
+
+        $order     = DB::table('tbl_orders')
+                        ->join('tbl_workunits','tbl_workunits.id_workunit','tbl_orders.workunit_id')
+                        ->join('users','users.id','tbl_orders.adminuser_id')
+                        ->where('id_order', $id)
+                        ->get();
+
+        $pdf        = PDF::loadview('v_admin_master/download_pdf', compact('order','dataitem'));
+        return $pdf->download($id.'.pdf');
     }
 
 }

@@ -39,11 +39,15 @@ Route::group(['middleware' => 'auth'], function () {
 
         Route::get('dashboard', [AdminController::class, 'index']);
         Route::get('chart_total_order', [AdminController::class,'getChartTotalOrder']);
+        Route::get('chart_total_exit_order', [AdminController::class,'getChartTotalExitOrder']);
 
         Route::get('show_user', [AdminController::class, 'showUser']);
+        Route::get('show_workunit', [AdminController::class, 'showWorkunit']);
+        Route::get('show_letter', [AdminController::class, 'showLetter']);
         Route::get('show_warehouse', [AdminController::class, 'showWarehouse']);
         Route::get('show_entry_item', [AdminController::class, 'showEntryItem']);
         Route::get('show_history', [AdminController::class, 'showHistory']);
+        Route::get('show_history_monthnow', [AdminController::class, 'showHistoryMonthNow']);
         Route::get('category_item', [AdminController::class, 'showCategoryItem']);
         Route::get('show_exit_item', [AdminController::class, 'showExitItem']);
         Route::get('create_user', [AdminController::class, 'createUser']);
@@ -53,11 +57,14 @@ Route::group(['middleware' => 'auth'], function () {
         Route::get('detail_exit_order/{id}', [AdminController::class, 'detailExitOrder']);
         Route::get('detail_warehouse/{id}', [AdminController::class, 'detailWarehouse']);
         Route::get('detail_slot/{id}', [AdminController::class, 'detailSlot']);
+        Route::get('detail_letter/{id}', [AdminController::class, 'detailLetter']);
+        Route::get('detail_order/{id}', [AdminController::class, 'detailOrder']);
         Route::get('show_profile/{id}', [AdminController::class, 'showProfile']);
-
         Route::post('edit_profile/{id}', [AdminController::class, 'editProfile']);
         Route::post('edit_password/{id}', [AdminController::class, 'editPassword']);
         Route::post('add_category_item', [AdminController::class, 'addCategoryItem']);
+        Route::post('add_workunit', [AdminController::class, 'addWorkunit']);
+        Route::post('edit_workunit/{id}', [AdminController::class, 'editWorkunit']);
         Route::post('edit_category_item/{id}', [AdminController::class, 'editCategoryItem']);
         Route::post('add_user', [AdminController::class, 'addUser']);
         Route::post('add_warehouse', [AdminController::class, 'addWarehouse']);
@@ -65,6 +72,9 @@ Route::group(['middleware' => 'auth'], function () {
         Route::post('update_warehouse/{id}', [AdminController::class, 'updateWarehouse']);
         Route::post('rack_pallet/{id}', [AdminController::class, 'detailWarehouse']);
         Route::post('delete_category/{id}', [AdminController::class, 'deleteCategory']);
+
+        // CETAK PDF
+        Route::get('download_pdf/{id}', [AdminController::class, 'downloadPDF']);
 
     });
 
@@ -77,6 +87,8 @@ Route::group(['middleware' => 'auth'], function () {
         Route::get('dashboard', [PetugasController::class, 'index']);
         Route::get('show_warehouse', [PetugasController::class, 'showWarehouse']);
         Route::get('show_history', [PetugasController::class, 'showHistory']);
+        Route::get('show_entry_item', [PetugasController::class, 'showEntryItem']);
+        Route::get('show_exit_item', [PetugasController::class, 'showExitItem']);
         Route::get('category_item', [PetugasController::class, 'showCategoryItem']);
         Route::get('create_all_order', [PetugasController::class, 'createAllOrder']);
         Route::get('create_exit_order', [PetugasController::class, 'createExitOrder']);
@@ -110,6 +122,9 @@ Route::group(['middleware' => 'auth'], function () {
         Route::get('/get_item_id', [PetugasController::class, 'getItemId']);
         Route::get('/get_item_id_not_in', [PetugasController::class, 'getItemIdNotIn']);
         Route::get('/get_orderdata_id', [PetugasController::class, 'getOrderDataId']);
+
+        // CETAK PDF
+        Route::get('download_pdf/{id}', [PetugasController::class, 'downloadPDF']);
 
     });
 

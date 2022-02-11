@@ -43,12 +43,16 @@
               @csrf
               <div class="row">
                 <div class="col-md-4">
-                  <label>Nomor Induk Karyawan (NIK) : </label>
+                  <label>Pilih Role :</label>
                   <div class="input-group mb-3">
                     <div class="input-group-prepend">
-                      <span class="input-group-text"><i class="fas fa-key"></i></span>
+                      <span class="input-group-text"><i class="fas fa-user-tag"></i></span>
                     </div>
-                    <input type="text" class="form-control" name="id" placeholder="Masukan NIK" required>
+                    <select class="form-control" name="role_id" required>
+                      <option value="">-- Pilih Role --</option>
+                      <option value="2">PETUGAS</option>
+                      <option value="3">SATUAN KERJA (SATKER)</option>
+                    </select>
                   </div>
                 </div>
                 <div class="col-md-4">
@@ -58,20 +62,6 @@
                       <span class="input-group-text"><i class="fas fa-user"></i></span>
                     </div>
                     <input type="text" class="form-control" name="full_name" placeholder="Masukan Nama Petugas / Satker" required>
-                  </div>
-                </div>
-                <div class="col-md-4">
-                  <label>Pilih Role :</label>
-                  <div class="input-group mb-3">
-                    <div class="input-group-prepend">
-                      <span class="input-group-text"><i class="fas fa-user-tag"></i></span>
-                    </div>
-                    <select class="form-control" name="role_id" required>
-                      <option value="">-- Pilih Role --</option>
-                      <option value="1">ADMIN MASTER</option>
-                      <option value="2">PETUGAS</option>
-                      <option value="3">SATUAN KERJA (SATKER)</option>
-                    </select>
                   </div>
                 </div>
                 <div class="col-md-4">
@@ -121,7 +111,7 @@
                 <div class="col-md-3">
                   <label>&nbsp;</label>
                   <div class="input-group mb-3">
-                    <button type="submit" class="form-control btn btn-secondary" onclick="return confirm('Data sudah benar ?')">
+                    <button type="submit" class="form-control btn btn-primary" onclick="return confirm('Data sudah benar ?')">
                       <strong>TAMBAH</strong>
                     </button>
                   </div>

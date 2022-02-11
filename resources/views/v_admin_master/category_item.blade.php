@@ -59,7 +59,13 @@
                         <tr>
                             <td>{{ $row->id_item_category }}</td>
                             <td>{{ $row->itemcategory_name }}</td>
-                            <td class="td-status"><a href="" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#modal-edit-category{{$row->id_item_category}}"><b>Edit</b></a></td>
+                            <td class="td-status">
+                                <a href="" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#modal-edit-category{{$row->id_item_category}}"><b>EDIT</b></a> 
+                                <!-- <form action="{{ url('admin-master/delete_category/'. $row->id_item_category) }} " method="POST">
+                                @csrf
+                                <button class="btn btn-danger btn-sm" onclick="return confirm('Yakin ingin menghapus kategori ini ?')"><b>HAPUS</b></button>
+                                </form> -->
+                            </td>
                         </tr>
                         @endforeach
                         </tbody>
@@ -115,7 +121,6 @@
                         <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
-
                 <form action="{{ url('admin-master/edit_category_item/'. $row->id_item_category) }}" method="POST">
                 @csrf
                     <div class="modal-body">

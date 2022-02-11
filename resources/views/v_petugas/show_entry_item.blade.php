@@ -1,4 +1,4 @@
-@extends('v_admin_master.layout.app')
+@extends('v_petugas.layout.app')
 
 @section('content')
 
@@ -11,7 +11,7 @@
           </div><!-- /.col -->
           <div class="col-sm-6">
             <ol class="breadcrumb float-sm-right">
-              <li class="breadcrumb-item"><a href="{{ url('admin-master/dashboard') }}">Dashboard</a></li>
+              <li class="breadcrumb-item"><a href="{{ url('admin-user/dashboard') }}">Dashboard</a></li>
               <li class="breadcrumb-item active">Data Barang Masuk</li>
             </ol>
           </div>
@@ -40,15 +40,14 @@
             </div>
             <!-- /.card-header -->
             <div class="card-body">
-                <table id="example1" class="table table-bordered table-striped">
+                <table id="example2" class="table table-bordered table-striped">
                     <thead>
                     <tr>
                         <th>No</th>
-                        <th>Gudang</th>
-                        <th>ID Palet</th>
-                        <th>Kode Barang</th>
-                        <th>Nama Barang</th>
                         <th>Jam/Tanggal</th>
+                        <th>Nama Barang</th>
+                        <th>ID Pallet</th>
+                        <th>SATKER</th>
                         <th>Status</th>
                     </tr>
                     </thead>
@@ -57,14 +56,15 @@
                     @foreach($entryitem as $data)
                     <tr>
                         <td>{{ $no++ }}</td>
-                        <td>{{ $data->warehouse_name }}</td>
-                        <td>{{ $data->slot_id }}</td>
-                        <td>{{ $data->item_code }}</td>
-                        <td>{{ $data->item_name }}</td>
-                        <td>{{ date('H:i', strtotime($data->order_tm)) }} /
+                        <td>{{ \Carbon\Carbon::parse($data->order_tm)->isoFormat('H:m') }} /
                             {{ \Carbon\Carbon::parse($data->order_dt)->isoFormat('DD MMM Y') }}</td>
+                        <td>{{ $data->item_name }}</td>
+                        <td>{{ $data->slot_id }}</td>
+                        <td>{{ $data->workunit_name }}</td>
                         <td class="td-status">
-                            <a class="btn btn-success btn-sm disabled">{{ $data->item_status }}</a>
+                            <a class="btn btn-success btn-sm disabled" style="text-transform:uppercase;font-weight: bold;">
+                                {{ $data->item_status }}
+                            </a>
                         </td>
                     </tr>
                     @endforeach
@@ -72,11 +72,10 @@
                       <tfoot>
                     <tr>
                         <th>No</th>
-                        <th>Gudang</th>
-                        <th>ID Palet</th>
-                        <th>Kode Barang</th>
-                        <th>Nama Barang</th>
                         <th>Jam/Tanggal</th>
+                        <th>Nama Barang</th>
+                        <th>ID Pallet</th>
+                        <th>SATKER</th>
                         <th>Status</th>
                     </tr>
                     </tfoot>

@@ -1,4 +1,4 @@
-@extends('v_petugas.layout.app')
+@extends('v_admin_master.layout.app')
 
 @section('content')
     @foreach($order as $data)
@@ -12,7 +12,7 @@
                 <i class="fas fa-print"></i>
               </a></h1>
               &nbsp;
-              <h1 class="m-0"><a href="{{ url('admin-user/download_pdf/'. $data->id_order) }}" class="btn btn-danger">
+              <h1 class="m-0"><a href="{{ url('admin-master/download_pdf/'. $data->id_order) }}" class="btn btn-danger">
                 <i class="fas fa-file-pdf"></i>
               </a></h1>
             </div>
@@ -23,12 +23,12 @@
     <!-- /.content-header -->
 
 
-	
-	<section class="content">
+  
+  <section class="content">
       <div class="container-fluid">
-      	<br>
-      	<table class="table table-borderless" style="background-color: white;">
-      		<thead>
+        <br>
+        <table class="table table-borderless" style="background-color: white;">
+          <thead>
                 <tr class="header-confirm">
                   <td><center><img src="{{ asset('assets/img/kemenkes.png' )}}" width="100" height="100"></center></td>
                   <td class="header-text-confirm">
@@ -43,13 +43,11 @@
             </thead>
             <tbody>
               <tr>
-                <td class="confirm-txt-tanggal" colspan="3">
-                  {{ \Carbon\Carbon::parse($data->order_dt)->isoFormat('DD MMMM Y') }}
-                </td>
+                <td class="confirm-txt-tanggal" colspan="3">{{ date('d F Y', strtotime($data->order_dt)) }}</td>
               </tr> 
               <tr>
                 <td>Nomor</td>
-                <td colspan="2"> : {{ $data->id_order }} </td>
+                <td colspan="2"> : {{ $data->letter_num }} </td>
               </tr>
               <tr>
                 <td>Perihal</td>
@@ -82,7 +80,7 @@
                 </td>
               </tr>
               <tr>
-                <td colspan="3">Jakarta, {{ \Carbon\Carbon::parse($data->order_dt)->isoFormat('DD MMMM Y') }}</td>
+                <td colspan="3">Jakarta, {{ date('d F Y', strtotime($data->order_dt)) }}</td>
               </tr>
               <tr>
                 <td><b>PETUGAS</b></td>
@@ -96,7 +94,7 @@
               </tr>
             </tbody>
             
-      	</table>
+        </table>
       </div>
   </section>
   <br>

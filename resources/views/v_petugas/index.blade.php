@@ -30,13 +30,13 @@
         <div class="row">
           <div class="col-lg-6 col-6">
             <!-- small box -->
-            <div class="small-box bg-info">
+            <div class="small-box" style="background-color:#008000;color: white;">
               <div class="inner">
                 <h4><b>Gudang 09</b></h4>
-                <p><h6>{{ $palletavail09 }} Pallet Tersedia</h6></p>
+                <p><h6>{{ $palletavail09 }} PALLET TERSEDIA</h6></p>
               </div>
               <div class="icon">
-                <i class="fas fa-pallet"></i>
+                <i class="fas fa-pallet" style="color:#f8f8ff;"></i>
               </div>
               <a href="{{ url('admin-user/detail_warehouse/G09') }}" class="small-box-footer">Detail <i class="fas fa-arrow-circle-right"></i></a>
             </div>
@@ -44,13 +44,13 @@
           <!-- ./col -->
           <div class="col-lg-6 col-6">
             <!-- small box -->
-            <div class="small-box bg-warning">
+            <div class="small-box" style="background-color:#008000;color: white;">
               <div class="inner">
                 <h4><b>Gudang 05 B</b></h4>
-                <p><h6>{{ $palletavail05b }} Pallet Tersedia</h6></p>
+                <p><h6>{{ $palletavail05b }} PALLET TERSEDIA</h6></p>
               </div>
               <div class="icon">
-                <i class="fas fa-pallet"></i>
+                <i class="fas fa-bars" style="color:#f8f8ff;"></i>
               </div>
               <a href="{{ url('admin-user/detail_warehouse/G05B') }}" class="small-box-footer">Detail <i class="fas fa-arrow-circle-right"></i></a>
             </div>
@@ -60,12 +60,207 @@
       </div>
     </section>
 
+    <section class="content">
+        <div class="container-fluid">
+            <div class="row">
+                <!-- <div class="col-md-12">
+                    <div class="card card-warning">
+                        <div class="card-header">
+                            <h3 class="card-title">SOP PETUGAS</h3>
+                        </div>
+                        <div class="card-body" style="text-align: justify;">
+                            <p>1. Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s.</p>
+                            <p>2. Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s.</p>
+                        </div>
+                    </div>
+                </div> -->
+                <div class="col-md-4" style="text-transform:uppercase;">
+                    <!-- Info Boxes Style 2 -->
+                    <div class="card" style="background-color:#0EA2F6;color: white;">
+                        <div class="card-header">
+                            <h3 class="card-title">
+                                <b>Bulan {{$month_now}}</b>
+                            </h3>
+                        </div>
+                    </div>
+                    <div class="info-box mb-3" style="background-color:#0EA2F6;color: white;">
+                      <span class="info-box-icon"><i class="fas fa-boxes"></i></span>
+
+                      <div class="info-box-content">
+                        <span class="info-box-text"><b>TOTAL PENGIRIMAN BARANG</b></span>
+                        <span class="info-box-number">{{ $totentryitem }} Pengiriman Barang Masuk</span>
+                      </div>
+                      <!-- /.info-box-content -->
+                    </div>
+                    <div class="info-box mb-3" style="background-color:#F65151;color: white;">
+                      <span class="info-box-icon"><i class="fas fa-boxes"></i></span>
+
+                      <div class="info-box-content">
+                        <span class="info-box-text"><b>TOTAL PENGAMBILAN BARANG</b></span>
+                        <span class="info-box-number">{{ $totexititem }} Pengambilan Barang Keluar</span>
+                      </div>
+                      <!-- /.info-box-content -->
+                    </div>
+                </div>
+                <div class="col-md-8">
+                    <div class="card" >
+                        <div class="card-header" style="background-color:#0EA2F6;color: white;">
+                            <h3 class="card-title">
+                                <b>DATA BARANG MASUK</b>
+                            </h3>
+                        </div>
+                        <div class="card-body">
+                            <table id="example2c" class="table table-bordered table-striped">
+                                <thead>
+                                    <tr style="font-size:15px;text-align: center;">
+                                        <th>NO</th>
+                                        <th>TANGGAL</th>
+                                        <th>DEADLINE</th>
+                                        <th>SATKER</th>
+                                        <th>TOTAL BARANG</th>
+                                        <th>STATUS</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <?php $no=1;?>
+                                    @foreach($endorders as $orders)
+                                        <tr class="td-status">
+                                            <td><a href="{{ url('admin-user/detail_order/'. $orders->id_order) }}"><b>{{$no++}}</b></a></td>
+                                            <td>{{ \Carbon\Carbon::parse($orders->order_dt)->isoFormat('DD MMM Y') }}</td>
+                                            <td>
+                                                @if($orders->order_deadline <= $datenow)
+                                                <button class="btn btn-danger btn-sm disabled">
+                                                    {{ \Carbon\Carbon::parse($orders->order_deadline)->isoFormat('DD MMM Y') }}
+                                                </button>
+                                                @endif
+                                                @if($orders->order_deadline > $datenow)
+                                                <button class="btn btn-warning btn-sm disabled"><b>
+                                                    {{ \Carbon\Carbon::parse($orders->order_deadline)->isoFormat('DD MMM Y') }}
+                                                </b></button>
+                                                @endif
+                                                
+                                            </td>
+                                            <td>{{$orders->workunit_name}}</td>
+                                            <td>{{$orders->totalitem}} Barang</td>
+                                            <td class="td-status">
+                                                @if($orders->order_category == 'Pengiriman')
+                                                <a class="btn btn-success btn-sm disabled"><b>Barang Masuk</b></a>
+                                                @endif
+                                                @if($orders->order_category == 'Pengambilan')
+                                                <a class="btn btn-danger btn-sm disabled">Barang Keluar</a>
+                                                @endif
+                                            </td>
+                                        </tr>
+                                    @endforeach
+                                </tbody>
+                                <tfoot>
+                                    <tr style="font-size:15px;text-align: center">
+                                        <th>NO</th>
+                                        <th>TANGGAL</th>
+                                        <th>DEADLINE</th>
+                                        <th>SATKER</th>
+                                        <th>TOTAL BARANG</th>
+                                        <th>STATUS</th>
+                                    </tr>
+                                </tfoot>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="col-md-6">
+                    <div class="card card-success">
+                        <div class="card-header">
+                            <h3 class="card-title">
+                                <b>DATA BARANG MASUK</b>
+                            </h3>
+                        </div>
+                        <div class="card-body">
+                            <table id="example2d" class="table table-bordered table-striped">
+                                <thead>
+                                    <tr style="font-size:15px;text-align: center;">
+                                        <th>NO</th>
+                                        <th>TANGGAL</th>
+                                        <th>SATKER</th>
+                                        <th>TOTAL BARANG</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <?php $exno=1; ?>
+                                    @foreach($enorders as $enorders)
+                                    <tr class="td-status">
+                                        <td><a href="{{ url('admin-user/detail_order/'. $enorders->id_order) }}"><b>{{$exno++}}</b></a></td>
+                                        <td>{{ \Carbon\Carbon::parse($enorders->order_dt)->isoFormat('DD MMM Y') }}</td>
+                                        <td>{{$enorders->workunit_name}}</td>
+                                        <td>{{$enorders->totalitem}} Barang</td>
+                                    </tr>
+                                    @endforeach
+                                </tbody>
+                                <tfoot>
+                                    <tr style="font-size:15px;text-align: center">
+                                        <th>NO</th>
+                                        <th>TANGGAL</th>
+                                        <th>SATKER</th>
+                                        <th>TOTAL BARANG</th>
+                                    </tr>
+                                </tfoot>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="col-md-6">
+                    <div class="card">
+                        <div class="card-header" style="background-color:#F65151;color: white;">
+                            <h3 class="card-title">
+                                <b>DATA BARANG KELUAR</b>
+                            </h3>
+                        </div>
+                        <div class="card-body">
+                            <table id="example2b" class="table table-bordered table-striped">
+                                <thead>
+                                    <tr style="font-size:15px;text-align: center;">
+                                        <th>NO</th>
+                                        <th>TANGGAL</th>
+                                        <th>SATKER</th>
+                                        <th>TOTAL BARANG</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <?php $exno=1; ?>
+                                    @foreach($exorders as $exorders)
+                                    <tr class="td-status">
+                                        <td><a href="{{ url('admin-user/detail_order/'. $exorders->id_order) }}"><b>{{$exno++}}</b></a></td>
+                                        <td>{{ \Carbon\Carbon::parse($exorders->order_dt)->isoFormat('DD MMM Y') }}</td>
+                                        <td>{{$exorders->workunit_name}}</td>
+                                        <td>{{$exorders->totalitem}} Barang</td>
+                                    </tr>
+                                    @endforeach
+                                </tbody>
+                                <tfoot>
+                                    <tr style="font-size:15px;text-align: center">
+                                        <th>NO</th>
+                                        <th>TANGGAL</th>
+                                        <th>SATKER</th>
+                                        <th>TOTAL BARANG</th>
+                                    </tr>
+                                </tfoot>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
     <!-- Main content -->
     <section class="content">
       <div class="container-fluid">
-        <div class="card card-primary card-outline">   
+        <div class="card card-warning">   
           <div class="card-header">
-              <h3 class="card-title left" style="float:left;margin-top: 0.5vh;">Data Gudang Aktif</h3>
+                <h3 class="card-title" style="float:left;margin-top: 0.5vh;">
+                    <b>DATA GUDANG AKTIF</b>
+                </h3>
           </div>
           <ul class="nav nav-tabs" id="custom-content-below-tab" role="tablist">
             <li class="nav-item">
@@ -75,7 +270,7 @@
               <a class="nav-link" id="custom-content-below-exititem-tab" data-toggle="pill" href="#custom-content-below-exititem" role="tab" aria-controls="custom-content-below-exititem" aria-selected="false"><b>Gudang 05B</b></a>
             </li>
           </ul>
-          <div class="card-body">
+          <div class="card-body" >
             <div class="tab-content" id="custom-content-below-tabContent">
               <!-- Barang Masuk -->
               <div class="tab-pane fade show active" id="custom-content-below-entryitem" role="tabpanel" aria-labelledby="custom-content-below-entryitem-tab">

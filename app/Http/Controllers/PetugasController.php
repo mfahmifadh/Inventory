@@ -17,17 +17,64 @@ use DB;
 use Auth;
 use Hash;
 use Str;
+use PDF;
+use Carbon\Carbon;
 
 
 class PetugasController extends Controller
 {
     public function index()
     {
+        $month_now      = Carbon::now()->isoFormat('MMMM');
+        $datenow        = Carbon::now()->isoFormat('Y-MM-D');
         $date           = date('Ymd', strtotime(now()));
         $totalorder     = DB::table('tbl_orders')->where('id_order','like','%'.$date.'%')->count();
         $totaldataorder = DB::table('tbl_orders_data')->count();
         $order_id       = ($date."".$totalorder)+1;
         $idorderdata    = ($date."".$totalorder."".$totaldataorder)+1;
+
+        $totentryitem   = DB::table('tbl_orders')
+                            ->where(DB::raw("(DATE_FORMAT(order_dt, '%Y-%m'))"), Carbon::now()->isoFormat('Y-MM'))
+                            ->where('order_category','Pengiriman')
+                            ->count();
+        $totexititem    = DB::table('tbl_orders')
+                            ->where(DB::raw("(DATE_FORMAT(order_dt, '%Y-%m'))"), Carbon::now()->isoFormat('Y-MM'))
+                            ->where('order_category','Pengambilan')
+                            ->count();
+
+        $endorders   = DB::table('tbl_orders_data')
+                        ->select('id_order','workunit_name','order_dt','order_category','order_deadline',
+                                DB::raw("sum(total_item) as totalitem"))
+                        ->join('tbl_orders','tbl_orders.id_order','tbl_orders_data.order_id')
+                        ->join('tbl_workunits','tbl_workunits.id_workunit','tbl_orders.workunit_id')
+                        ->groupBy('id_order','workunit_name','order_dt','order_category','order_deadline')
+                        ->where('order_category','Pengiriman')
+                        ->where('is_delete', 'false')
+                        ->whereRaw("DATEDIFF(order_deadline, '".$datenow."') <= 14")
+                        ->orderby('order_dt','DESC')
+                        ->get();
+
+        $enorders   = DB::table('tbl_orders_data')
+                        ->select('id_order','workunit_name','order_dt','order_category','order_deadline',
+                                DB::raw("sum(total_item) as totalitem"))
+                        ->join('tbl_orders','tbl_orders.id_order','tbl_orders_data.order_id')
+                        ->join('tbl_workunits','tbl_workunits.id_workunit','tbl_orders.workunit_id')
+                        ->groupBy('id_order','workunit_name','order_dt','order_category','order_deadline')
+                        ->where(DB::raw("(DATE_FORMAT(order_dt, '%Y-%m'))"), Carbon::now()->isoFormat('Y-MM'))
+                        ->where('order_category','Pengiriman')
+                        ->orderby('order_dt','DESC')
+                        ->get();
+
+        $exorders   = DB::table('tbl_orders_data')
+                        ->select('id_order','workunit_name','order_dt','order_category','order_deadline',
+                                DB::raw("sum(total_item) as totalitem"))
+                        ->join('tbl_orders','tbl_orders.id_order','tbl_orders_data.order_id')
+                        ->join('tbl_workunits','tbl_workunits.id_workunit','tbl_orders.workunit_id')
+                        ->groupBy('id_order','workunit_name','order_dt','order_category','order_deadline')
+                        ->where('order_category','Pengambilan')
+                        ->where(DB::raw("(DATE_FORMAT(order_dt, '%Y-%m'))"), Carbon::now()->isoFormat('Y-MM'))
+                        ->orderby('order_dt','DESC')
+                        ->get();
 
         $warehouse09    = DB::table('tbl_warehouses')
                             ->join('tbl_status','tbl_status.id_status','tbl_warehouses.status_id')
@@ -99,12 +146,37 @@ class PetugasController extends Controller
         return view('v_petugas.index', compact('warehouse09','warehouse05B','pallet','rack_pallet_one_lvl1',
                 'rack_pallet_one_lvl2','rack_pallet_two_lvl1','rack_pallet_two_lvl2','idorderdata','order_id',
                 'rack_pallet_three_lvl1','rack_pallet_three_lvl2','rack_pallet_four_lvl1','rack_pallet_four_lvl2',
-                'palletavail09','palletavail05b'));
+                'palletavail09','palletavail05b','enorders','month_now','totentryitem','totexititem','datenow','exorders',
+                'endorders'));
     }
 
     // ====================
     // ORDER 
     // ==================== 
+
+    public function detailOrder($id)
+    {
+        $date           = date('Ymd', strtotime(now()));
+        $totalorder     = DB::table('tbl_orders')->where('id_order','like','%'.$date.'%')->count();
+        $totaldataorder = DB::table('tbl_orders_data')->count();
+        $order_id       = ($date."".$totalorder)+1;
+        $idorderdata    = ($date."".$totalorder."".$totaldataorder)+1;
+
+        $orders   = DB::table('tbl_orders')
+                        ->join('tbl_workunits','tbl_workunits.id_workunit','tbl_orders.workunit_id')
+                        ->where('id_order', $id)
+                        ->get();
+
+        $items    = DB::table('tbl_orders_detail')
+                        ->join('tbl_orders_data','tbl_orders_data.id_order_data','tbl_orders_detail.order_data_id')
+                        ->join('tbl_orders','tbl_orders.id_order','tbl_orders_data.order_id')
+                        ->join('tbl_slots','tbl_slots.id_slot','tbl_orders_data.slot_id')
+                        ->join('tbl_warehouses', 'tbl_warehouses.id_warehouse','tbl_slots.warehouse_id')
+                        ->join('tbl_workunits','tbl_workunits.id_workunit','tbl_orders.workunit_id')
+                        ->where('id_order', $id)
+                        ->get();
+        return view('v_petugas.detail_order', compact('orders','items','idorderdata'));
+    }
 
     public function createAllOrder()
     {
@@ -116,7 +188,8 @@ class PetugasController extends Controller
         $idorderdata    = ($date2."".$totalorder."".$totaldataorder)+1;
         //dd($order_id);
         $slot           = DB::table('tbl_slots')
-                            ->join('tbl_warehouses','tbl_warehouses.id_warehouse','tbl_slots.warehouse_id')->get();
+                            ->join('tbl_warehouses','tbl_warehouses.id_warehouse','tbl_slots.warehouse_id')
+                            ->get();
 
         $petugas      = DB::table('users')->where('role_id', 2)->get();
         $satker       = DB::table('users')->join('tbl_workunits','tbl_workunits.id_workunit','users.workunit_id')
@@ -144,8 +217,8 @@ class PetugasController extends Controller
                         ->where('role_id',3)->get();
         $warehouse    = DB::table('tbl_warehouses')->where('status_id',1)->get();
         $itemcategory = DB::table('tbl_item_category')->get();
-        return view('v_petugas.create_exit_order', compact('slot','petugas','satker','warehouse','itemcategory',
-                                                            'order_id','idorderdata'));
+        return view('v_petugas.create_exit_order', compact('slot','petugas','satker','warehouse',
+                                                        'itemcategory','order_id','idorderdata'));
     }
 
     public function addOrderAll(Request $request)
@@ -730,6 +803,56 @@ class PetugasController extends Controller
     }
 
     // ====================
+    // BARANG MASUK
+    // ====================
+
+    public function showEntryItem()
+    {
+        $date           = date('Ymd', strtotime(now()));
+        $totalorder     = DB::table('tbl_orders')->where('id_order','like','%'.$date.'%')->count();
+        $totaldataorder = DB::table('tbl_orders_data')->count();
+        $idorderdata    = ($date."".$totalorder."".$totaldataorder)+1;
+
+        $entryitem  = DB::table('tbl_orders_detail')
+                        ->join('tbl_item_category','tbl_item_category.id_item_category','tbl_orders_detail.itemcategory_id')
+                        ->join('tbl_orders_data','tbl_orders_data.id_order_data','tbl_orders_detail.order_data_id')
+                        ->join('tbl_orders','tbl_orders.id_order','tbl_orders_data.order_id')
+                        ->join('tbl_slots','tbl_slots.id_slot','tbl_orders_data.slot_id')
+                        ->join('tbl_workunits','tbl_workunits.id_workunit','tbl_orders.workunit_id')
+                        ->where('item_status', 'Barang Masuk')
+                        ->orderby('order_dt','DESC')
+                        ->get();
+        return view('v_petugas/show_entry_item', compact('entryitem','idorderdata'));
+    }
+    // ====================
+    // BARANG KELUAR
+    // ====================
+
+    public function showExitItem()
+    {
+        $date           = date('Ymd', strtotime(now()));
+        $totalorder     = DB::table('tbl_orders')->where('id_order','like','%'.$date.'%')->count();
+        $totaldataorder = DB::table('tbl_orders_data')->count();
+        $idorderdata    = ($date."".$totalorder."".$totaldataorder)+1;
+
+        $exititem  = DB::table('tbl_orders_detail')
+                        ->join('tbl_item_category','tbl_item_category.id_item_category','tbl_orders_detail.itemcategory_id')
+                        ->join('tbl_orders_data','tbl_orders_data.id_order_data','tbl_orders_detail.order_data_id')
+                        ->join('tbl_orders','tbl_orders.id_order','tbl_orders_data.order_id')
+                        ->join('tbl_slots','tbl_slots.id_slot','tbl_orders_data.slot_id')
+                        ->join('tbl_workunits','tbl_workunits.id_workunit','tbl_orders.workunit_id')
+                        ->where('item_status', 'Barang Keluar')
+                        ->orderby('order_dt','DESC')
+                        ->get();
+        $exititem2 = DB::table('tbl_orders_detail')->select('letter_num', DB::raw("count(item_code) as totalitem "))
+                        ->join('tbl_orders_data','tbl_orders_data.id_order_data','tbl_orders_detail.order_data_id')
+                        ->join('tbl_orders','tbl_orders.id_order','tbl_orders_data.order_id')
+                        ->groupBy('letter_num')
+                        ->get();
+        return view('v_petugas/show_exit_item', compact('exititem','exititem2','idorderdata'));
+    }
+
+    // ====================
     // CATEGORY ITEM 
     // ====================
 
@@ -831,6 +954,32 @@ class PetugasController extends Controller
                         ->orderby('order_dt','DESC')
                         ->get();
         return view('v_petugas.show_history', compact('history', 'idorderdata'));
+    }
+
+    // ====================
+    // CETAK PDF 
+    // ====================
+
+    public function downloadPDF($id)
+    {
+        $letter_num = DB::table('tbl_orders')->select('letter_num')->where('id_order', $id)->get();
+        $dataitem = DB::table('tbl_orders_detail')
+                        ->join('tbl_item_category','tbl_item_category.id_item_category','tbl_orders_detail.itemcategory_id')
+                        ->join('tbl_orders_data','tbl_orders_data.id_order_data','tbl_orders_detail.order_data_id')
+                        ->join('tbl_orders','tbl_orders.id_order','tbl_orders_data.order_id')
+                        ->join('tbl_slots','tbl_slots.id_slot','tbl_orders_data.slot_id')
+                        ->join('tbl_warehouses','tbl_warehouses.id_warehouse','tbl_slots.warehouse_id')
+                        ->where('order_id', $id)
+                        ->get();
+
+        $order     = DB::table('tbl_orders')
+                        ->join('tbl_workunits','tbl_workunits.id_workunit','tbl_orders.workunit_id')
+                        ->join('users','users.id','tbl_orders.adminuser_id')
+                        ->where('id_order', $id)
+                        ->get();
+
+        $pdf        = PDF::loadview('v_petugas/pdf_entry_order', compact('order','dataitem'));
+        return $pdf->download($id.'.pdf');
     }
 
 

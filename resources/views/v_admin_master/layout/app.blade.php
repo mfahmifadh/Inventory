@@ -54,7 +54,7 @@
     <aside class="main-sidebar sidebar-dark-primary elevation-4" >
       <!-- Brand Logo -->
       <a href="{{ url('admin-master/dashboard') }}" class="brand-link">
-        <center><img class="animation__shake img-responsive" src="{{ asset('assets/img/KemenkesLogo2Brown.png') }}" alt="Biro Umum KEMENKES" class="brand-image img-circle elevation-3" style="opacity: .8" width="70%"></center>
+        <center><img class="animation__shake img-responsive" src="{{ asset('assets/img/KemenkesLogo2.png') }}" alt="Biro Umum KEMENKES" class="brand-image img-circle elevation-3" style="opacity: .8" width="70%"></center>
       </a>
 
       <!-- Sidebar -->
@@ -81,10 +81,18 @@
               </a>
             </li> 
             <li class="nav-item">
+              <a href="{{ url('admin-master/show_letter') }}" class="nav-link {{ Request::is('admin-master/show_letter') ? 'active' : '' }}">
+                <i class="nav-icon fas fa-file"></i>
+                <p>
+                  Data Arsip Surat
+                </p>
+              </a>
+            </li> 
+            <li class="nav-item">
               <a href="{{ url('admin-master/show_warehouse') }}" class="nav-link {{ Request::is('admin-master/show_warehouse') ? 'active' : '' }}">
                 <i class="nav-icon fas fa-warehouse"></i>
                 <p>
-                  Gudang
+                  Data Gudang
                 </p>
               </a>
             </li>
@@ -92,7 +100,7 @@
               <a href="{{ url('admin-master/show_user') }}" class="nav-link {{ Request::is('admin-master/show_user') ? 'active' : '' }}">
                 <i class="nav-icon fas fa-users"></i>
                 <p>
-                  Pengguna
+                  Data Pengguna
                 </p>
               </a>
             </li>
@@ -101,23 +109,6 @@
                 <i class="nav-icon fas fa-box-open"></i>
                 <p>
                   Data Barang
-                  <i class="right fas fa-angle-left"></i>
-                </p>
-              </a>
-              <ul class="nav nav-treeview">
-                <li class="nav-item">
-                  <a href="{{ url('admin-master/category_item/') }}" class="nav-link {{ Request::is('admin-master/category_item') ? 'active' : '' }}">
-                    <i class="fas fa-list nav-icon"></i>
-                    <p>Kategori Barang</p>
-                  </a>
-                </li>
-              </ul>
-            </li>
-            <li class="nav-item">
-              <a href="#" class="nav-link">
-                <i class="nav-icon fas fa-people-carry"></i>
-                <p>
-                  Data Pengiriman
                   <i class="right fas fa-angle-left"></i>
                 </p>
               </a>
@@ -134,13 +125,29 @@
                     <p>Barang Keluar</p>
                   </a>
                 </li>
-                <li class="nav-item">
-                  <a href="{{ url('admin-master/show_history') }}" class="nav-link {{ Request::is('admin-master/show_history') ? 'active' : '' }}">
-                    <i class="fas fa-history nav-icon"></i>
-                    <p>Riwayat</p>
-                  </a>
-                </li>
               </ul>
+            </li>
+            <li class="nav-item">
+              <a href="{{ url('admin-master/show_workunit') }}" class="nav-link {{ Request::is('admin-user/show_history') ? 'active' : '' }}">
+                <i class="nav-icon fas fa-house-user"></i>
+                <p>
+                  Data SATKER
+                </p>
+              </a>
+            </li>
+            <li class="nav-item">
+              <a href="{{ url('admin-master/category_item/') }}" class="nav-link {{ Request::is('admin-master/category_item') ? 'active' : '' }}">
+                <i class="fas fa-list nav-icon"></i>
+                <p>Kategori Barang</p>
+              </a>
+            </li>
+            <li class="nav-item">
+              <a href="{{ url('admin-master/show_history') }}" class="nav-link {{ Request::is('admin-user/show_history') ? 'active' : '' }}">
+                <i class="nav-icon fas fa-history"></i>
+                <p>
+                  Riwayat
+                </p>
+              </a>
             </li>
           </ul>
         </nav>
@@ -209,75 +216,100 @@
     }
 
     $(function () {
-      // Data Table
-      $("#example1").DataTable({
-        "responsive": true, "lengthChange": false, "autoWidth": false,
-        "searching":true, "paging": true, "info": true,
-        "buttons": ["print","pdf","excel"]
-      }).buttons().container().appendTo('#example1_wrapper .col-md-6:eq(0)');
+        $("#example1").DataTable({
+          "responsive": true, "lengthChange": false, "autoWidth": false,
+          "searching":true, "paging": true, "info": true,
+          "buttons": ["print","pdf","excel"]
+        }).buttons().container().appendTo('#example1_wrapper .col-md-6:eq(0)');
 
-      $("#example2").DataTable({
-        "responsive": true, "lengthChange": false, "autoWidth": false
-      }).buttons().container().appendTo('#example1_wrapper .col-md-6:eq(0)');
+        $("#example2").DataTable({
+          "responsive": true, "lengthChange": false, "autoWidth": false
+        }).buttons().container().appendTo('#example1_wrapper .col-md-6:eq(0)');
 
-      $("#example2a").DataTable({
-        "responsive": true, "lengthChange": false, "autoWidth": false
-      }).buttons().container().appendTo('#example1_wrapper .col-md-6:eq(0)');
+        $("#example2a").DataTable({
+          "responsive": true, "lengthChange": false, "autoWidth": false
+        }).buttons().container().appendTo('#example1_wrapper .col-md-6:eq(0)');
 
-      $("#example2b").DataTable({
-        "responsive": true, "lengthChange": false, "autoWidth": false
-      }).buttons().container().appendTo('#example1_wrapper .col-md-6:eq(0)');
+        $("#example2b").DataTable({
+          "responsive": true, "lengthChange": false, "autoWidth": false
+        }).buttons().container().appendTo('#example1_wrapper .col-md-6:eq(0)');
 
-      $('#example3').DataTable({
-        "paging": true,
-        "lengthChange": false,
-        "searching": false,
-        "ordering": true,
-        "info": true,
-        "autoWidth": false,
-        "responsive": true,
-      });
-      // Summernote
-      $('.summernote').summernote();
+        $('#example3').DataTable({
+          "paging": true,
+          "lengthChange": false,
+          "searching": false,
+          "ordering": true,
+          "info": true,
+          "autoWidth": false,
+          "responsive": true,
+        });4
+
+        $('#example3b').DataTable({
+          "paging": true,
+          "lengthChange": false,
+          "searching": false,
+          "ordering": true,
+          "info": true,
+          "autoWidth": false,
+          "responsive": true,
+        });
+
+        $("#example4a").DataTable({
+          "responsive": true, "lengthChange": false, "autoWidth": false, "pageLength":5
+        }).buttons().container().appendTo('#example1_wrapper .col-md-6:eq(0)');
+
+        $("#example4b").DataTable({
+          "responsive": true, "lengthChange": false, "autoWidth": false, "pageLength":5
+        }).buttons().container().appendTo('#example1_wrapper .col-md-6:eq(0)');
+
+        // Summernote
+        $('.summernote').summernote();
+    });
+
+    $(function () {
       //-------------
-        //- BAR CHART -
-        //-------------
-        var url = "{{ url('admin-master/chart_total_order') }}"
-        var Month      = new Array();
-        var TotalScore = new Array();
-        $(document).ready(function(){
-          $.get(url, function(response){
-              response.forEach(function(data){
-                Month.push(data.month);
-                TotalScore.push(data.totalscore);
-              });
+      //- BAR CHART -
+      //-------------
+      var url = "{{ url('admin-master/chart_total_order') }}"
+      var Month      = new Array();
+      var TotalScore = new Array();
+      $(document).ready(function(){
+        $.get(url, function(response){
+          response.forEach(function(data){
+            Month.push(data.month);
+            TotalScore.push(data.totalentryitem);
+          });
 
-          var barChartCanvas = $('#barChart').get(0).getContext('2d')
-          var barChartData = {
-            labels  : Month,
-            datasets: [
-              {
-                label               : 'Total Kartu Kuning',
-                backgroundColor     : '#FFC107',
-                borderColor         : 'rgba(60,141,188,0.8)',
-                pointRadius          : false,
-                pointColor          : '#3b8bba',
-                pointStrokeColor    : 'rgba(60,141,188,1)',
-                pointHighlightFill  : '#fff',
-                pointHighlightStroke: 'rgba(60,141,188,1)',
-                data                : TotalScore
-              }
+        var barChartCanvas = $('#barChart').get(0).getContext('2d')
+        var barChartData = {
+          labels  : Month,
+          datasets: [
+            {
+              label               : 'Total Barang Masuk',
+              backgroundColor     : "#66CC91",
+              borderColor         : 'rgba(60,141,188,0.8)',
+              pointRadius          : false,
+              pointColor          : '#3b8bba',
+              pointStrokeColor    : 'rgba(60,141,188,1)',
+              pointHighlightFill  : '#fff',
+              pointHighlightStroke: 'rgba(60,141,188,1)',
+              data                : TotalScore
+            }
               
-            ]
-          }
-          var temp0 = barChartData.datasets[0]
-          barChartData.datasets[0] = temp0
+          ]
+        }
 
-          var barChartOptions = {
-            responsive              : true,
-            maintainAspectRatio     : false,
-            datasetFill             : false
+        var barChartOptions = {
+          responsive              : true,
+          maintainAspectRatio     : true,
+          scales : {
+              yAxes : [{
+                  ticks : {
+                      beginAtZero : true
+                  }   
+              }]
           }
+        }
 
           new Chart(barChartCanvas, {
             type: 'bar',
@@ -286,6 +318,59 @@
           })
         });
       });
+
+      //------------------
+      //- BAR CHART EXIT -
+      //------------------
+      var exurl = "{{ url('admin-master/chart_total_exit_order') }}"
+      var ExMonth      = new Array();
+      var ExTotalScore = new Array();
+      $(document).ready(function(){
+        $.get(exurl, function(response){
+          response.forEach(function(data){
+            ExMonth.push(data.month);
+            ExTotalScore.push(data.totalexititem);
+          });
+
+        var barChartCanvas = $('#barChartExit').get(0).getContext('2d')
+        var barChartData = {
+          labels  : ExMonth,
+          datasets: [
+            {
+              label               : 'Total Barang Keluar',
+              backgroundColor     : "#FC8181",
+              borderColor         : 'rgba(60,141,188,0.8)',
+              pointRadius          : false,
+              pointColor          : '#3b8bba',
+              pointStrokeColor    : 'rgba(60,141,188,1)',
+              pointHighlightFill  : '#fff',
+              pointHighlightStroke: 'rgba(60,141,188,1)',
+              data                : ExTotalScore
+            }
+              
+          ]
+        }
+
+        var barChartOptions = {
+          responsive              : true,
+          maintainAspectRatio     : true,
+          scales : {
+              yAxes : [{
+                  ticks : {
+                      beginAtZero : true
+                  }   
+              }]
+          }
+        }
+
+          new Chart(barChartCanvas, {
+            type: 'bar',
+            data: barChartData,
+            options: barChartOptions
+          })
+        });
+      });
+
     });
 
   </script>
